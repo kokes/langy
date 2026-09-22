@@ -102,31 +102,46 @@
         box-shadow: var(--shadow-press);
       }
 
-      .categories {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.45rem;
         margin-bottom: 1rem;
       }
 
-      .categories button {
+      @media (min-width: 420px) {
+        .topic-grid {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+
+      .topic-grid button {
         border: none;
         font: inherit;
         font-weight: 800;
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
-        border-radius: 999px;
+        font-size: 0.72rem;
+        line-height: 1.15;
+        min-height: 2.85rem;
+        padding: 0.4rem 0.35rem;
+        border-radius: 0.85rem;
         cursor: pointer;
         background: var(--card);
         box-shadow: var(--shadow-press);
-        transition: transform 0.1s, box-shadow 0.1s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.1rem;
       }
 
-      .categories button[aria-pressed="true"] {
+      .topic-grid button .ico {
+        font-size: 1.25rem;
+        line-height: 1;
+      }
+
+      .topic-grid button[aria-pressed="true"] {
         background: var(--accent2);
         color: #0d3d3a;
-        transform: translateY(2px);
         box-shadow: 0 2px 0 #2a9d8f;
       }
 
@@ -383,7 +398,7 @@
         <button type="button" id="mode-game" aria-pressed="false">Listen</button>
       </div>
 
-      <div class="categories" role="group" aria-label="Category"></div>
+      <div class="topic-grid" role="group" aria-label="Pick a topic"></div>
 
       <section class="panel active" id="panel-read" aria-label="Read mode">
         <div class="read-banner" id="read-banner" aria-live="polite">
@@ -422,113 +437,8 @@
       </details>
     </div>
 
+    <script src="lessons.js"></script>
     <script>
-      const LETTER_ITEMS = [
-        ["A", "🍎", "A IS FOR APPLE"],
-        ["B", "🐻", "B IS FOR BEAR"],
-        ["C", "🐱", "C IS FOR CAT"],
-        ["D", "🐶", "D IS FOR DOG"],
-        ["E", "🐘", "E IS FOR ELEPHANT"],
-        ["F", "🐟", "F IS FOR FISH"],
-        ["G", "🍇", "G IS FOR GRAPES"],
-        ["H", "🏠", "H IS FOR HOUSE"],
-        ["I", "🧊", "I IS FOR ICE"],
-        ["J", "🧃", "J IS FOR JUICE"],
-        ["K", "🪁", "K IS FOR KITE"],
-        ["L", "🦁", "L IS FOR LION"],
-        ["M", "🌙", "M IS FOR MOON"],
-        ["N", "🪺", "N IS FOR NEST"],
-        ["O", "🍊", "O IS FOR ORANGE"],
-        ["P", "🐷", "P IS FOR PIG"],
-        ["Q", "👑", "Q IS FOR QUEEN"],
-        ["R", "🐰", "R IS FOR RABBIT"],
-        ["S", "☀️", "S IS FOR SUN"],
-        ["T", "🌳", "T IS FOR TREE"],
-        ["U", "☂️", "U IS FOR UMBRELLA"],
-        ["V", "🎻", "V IS FOR VIOLIN"],
-        ["W", "💧", "W IS FOR WATER"],
-        ["X", "🩻", "X IS FOR X-RAY"],
-        ["Y", "🪀", "Y IS FOR YO-YO"],
-        ["Z", "🦓", "Z IS FOR ZEBRA"],
-      ].map(([letter, emoji, line]) => ({
-        word: letter.toLowerCase(),
-        letter,
-        emoji,
-        line,
-      }));
-
-      const DIGIT_ITEMS = [
-        ["0", "ZERO", "0️⃣", "ZERO EGGS IN THE BOX!"],
-        ["1", "ONE", "1️⃣", "ONE LITTLE STAR!"],
-        ["2", "TWO", "2️⃣", "TWO HANDS!"],
-        ["3", "THREE", "3️⃣", "THREE BEARS!"],
-        ["4", "FOUR", "4️⃣", "FOUR WHEELS!"],
-        ["5", "FIVE", "5️⃣", "HIGH FIVE!"],
-        ["6", "SIX", "6️⃣", "SIX EGGS!"],
-        ["7", "SEVEN", "7️⃣", "SEVEN COLORS!"],
-        ["8", "EIGHT", "8️⃣", "EIGHT LEGS ON A SPIDER!"],
-        ["9", "NINE", "9️⃣", "NINE BALLOONS!"],
-        ["10", "TEN", "🔟", "TEN FINGERS!"],
-      ].map(([digit, word, emoji, line]) => ({
-        word: word.toLowerCase(),
-        digit,
-        emoji,
-        line,
-      }));
-
-      const LESSONS = {
-        letters: {
-          label: "LETTERS",
-          icon: "🔤",
-          kind: "letters",
-          items: LETTER_ITEMS,
-        },
-        digits: {
-          label: "DIGITS",
-          icon: "🔢",
-          kind: "digits",
-          items: DIGIT_ITEMS,
-        },
-        numbers: {
-          label: "NUMBERS",
-          icon: "🔢",
-          kind: "words",
-          items: DIGIT_ITEMS.filter((d) => d.digit !== "10" && d.digit !== "0"),
-        },
-        animals: {
-          label: "ANIMALS",
-          icon: "🐾",
-          kind: "words",
-          items: [
-            { word: "cat", emoji: "🐱", line: "THE CAT SAYS MEOW!" },
-            { word: "dog", emoji: "🐶", line: "A HAPPY DOG!" },
-            { word: "bird", emoji: "🐦", line: "THE BIRD CAN FLY!" },
-            { word: "fish", emoji: "🐟", line: "THE FISH SWIMS!" },
-            { word: "cow", emoji: "🐮", line: "THE COW SAYS MOO!" },
-            { word: "pig", emoji: "🐷", line: "OINK OINK!" },
-            { word: "duck", emoji: "🦆", line: "QUACK QUACK!" },
-            { word: "frog", emoji: "🐸", line: "RIBBIT!" },
-            { word: "lion", emoji: "🦁", line: "ROAR!" },
-          ],
-        },
-        colors: {
-          label: "COLORS",
-          icon: "🎨",
-          kind: "words",
-          items: [
-            { word: "red", emoji: "🔴", line: "RED LIKE AN APPLE!" },
-            { word: "blue", emoji: "🔵", line: "BLUE LIKE THE SKY!" },
-            { word: "green", emoji: "🟢", line: "GREEN LIKE GRASS!" },
-            { word: "yellow", emoji: "🟡", line: "YELLOW LIKE THE SUN!" },
-            { word: "orange", emoji: "🟠", line: "ORANGE LIKE A CARROT!" },
-            { word: "purple", emoji: "🟣", line: "PURPLE LIKE GRAPES!" },
-            { word: "pink", emoji: "🩷", line: "PRETTY PINK!" },
-            { word: "black", emoji: "⚫", line: "BLACK LIKE NIGHT!" },
-            { word: "white", emoji: "⚪", line: "WHITE LIKE SNOW!" },
-          ],
-        },
-      };
-
       const synth = window.speechSynthesis;
       const STORAGE_VOICE = "langy-voice";
       const STORAGE_RATE = "langy-rate";
@@ -537,7 +447,20 @@
         /eloquence|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|jester|organ|superstar|trinoids|whisper|zarvox|wobble|albert|fred|hysterical|pipe|princess|ralph|junior|kathy|eddy|flo|grandma|grandpa/i;
       const RECOMMENDED = /^(Samantha|Alex|Karen|Daniel|Moira|Tessa|Victoria|Kate|Oliver|Arthur|Tom|Martha|Jamie|Aaron|Nathan)/i;
 
-      let categoryKey = "letters";
+      const TOPICS = [
+        { id: "letters", label: "LETTERS", icon: "🔤", keys: ["letters"] },
+        { id: "numbers", label: "NUMBERS", icon: "🔢", keys: ["digits", "numbers"] },
+        { id: "animals", label: "ANIMALS", icon: "🐾", keys: ["animals"] },
+        { id: "food", label: "FOOD", icon: "🍎", keys: ["food"] },
+        { id: "colors", label: "COLORS", icon: "🎨", keys: ["colors"] },
+        { id: "people", label: "PEOPLE", icon: "🧒", keys: ["family", "body", "feelings", "clothes", "jobs"] },
+        { id: "home", label: "HOME", icon: "🏠", keys: ["home", "school", "toys"] },
+        { id: "outside", label: "OUTSIDE", icon: "🌳", keys: ["nature", "weather", "places"] },
+        { id: "go", label: "GO!", icon: "🚗", keys: ["transport", "sports", "actions"] },
+        { id: "more", label: "MORE", icon: "⭐", keys: ["shapes", "time"] },
+      ];
+
+      let topicId = "letters";
       let gameTarget = null;
       let gameScore = 0;
       let gameRound = 0;
@@ -549,22 +472,26 @@
       const rateValueEl = document.getElementById("rate-value");
       const readGrid = document.getElementById("read-grid");
       const gameGrid = document.getElementById("game-grid");
-      const categoriesEl = document.querySelector(".categories");
       const readBanner = document.getElementById("read-banner");
+      const topicGridEl = document.querySelector(".topic-grid");
 
       function up(text) {
         return String(text).toUpperCase();
       }
 
+      function lessonKind(item) {
+        return LESSONS[item.lessonKey].kind;
+      }
+
       function speakKey(item) {
         if (item.letter) return item.letter;
-        if (item.digit && LESSONS[categoryKey].kind === "digits") return item.digit;
+        if (item.digit && lessonKind(item) === "digits") return item.digit;
         return item.word;
       }
 
       function displayTitle(item) {
         if (item.letter) return item.letter;
-        if (item.digit && LESSONS[categoryKey].kind === "digits") return item.digit;
+        if (item.digit && lessonKind(item) === "digits") return item.digit;
         if (item.digit) return item.digit + " · " + up(item.word);
         return up(item.word);
       }
@@ -670,28 +597,50 @@
       }
 
       function currentItems() {
-        return LESSONS[categoryKey].items;
+        const topic = TOPICS.find((t) => t.id === topicId) || TOPICS[0];
+        const seen = new Set();
+        const out = [];
+        for (const key of topic.keys) {
+          const lesson = LESSONS[key];
+          if (!lesson) continue;
+          for (const item of lesson.items) {
+            const uid = (item.letter || "") + "|" + (item.digit || "") + "|" + item.word;
+            if (seen.has(uid)) continue;
+            seen.add(uid);
+            out.push({ ...item, lessonKey: key });
+          }
+        }
+        return out;
       }
 
-      function renderCategoriesFix() {
-        categoriesEl.replaceChildren();
-        for (const [key, cat] of Object.entries(LESSONS)) {
+      function gridUsesLettersLayout(items) {
+        return items.length > 0 && items.every((i) => i.letter);
+      }
+
+      function selectTopic(id) {
+        topicId = id;
+        renderTopicGrid();
+        resetReadBanner();
+        renderReadGrid();
+        resetGame();
+        synth?.cancel();
+      }
+
+      function renderTopicGrid() {
+        topicGridEl.replaceChildren();
+        for (const topic of TOPICS) {
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.textContent = cat.icon + " " + cat.label;
-          btn.setAttribute("aria-pressed", key === categoryKey ? "true" : "false");
-          btn.addEventListener("click", () => {
-            categoryKey = key;
-            renderCategoriesFix();
-            renderReadGrid();
-            resetGame();
-          });
-          categoriesEl.appendChild(btn);
+          btn.innerHTML =
+            '<span class="ico" aria-hidden="true">' + topic.icon + "</span><span>" + topic.label + "</span>";
+          btn.setAttribute("aria-pressed", topic.id === topicId ? "true" : "false");
+          btn.addEventListener("click", () => selectTopic(topic.id));
+          topicGridEl.appendChild(btn);
         }
       }
 
       function cardInner(item) {
-        const kind = LESSONS[categoryKey].kind;
+        const kind = lessonKind(item);
         if (item.letter) {
           return (
             '<span class="glyph" aria-hidden="true">' +
@@ -754,10 +703,10 @@
 
       function renderReadGrid() {
         resetReadBanner();
-        const kind = LESSONS[categoryKey].kind;
-        readGrid.className = "grid" + (kind === "letters" ? " letters" : "");
+        const items = currentItems();
+        readGrid.className = "grid" + (gridUsesLettersLayout(items) ? " letters" : "");
         readGrid.replaceChildren();
-        for (const item of currentItems()) {
+        for (const item of items) {
           readGrid.appendChild(
             makeCard(item, (it) => {
               showReadBanner(it);
@@ -790,8 +739,7 @@
       }
 
       function renderGameGrid(choices) {
-        const kind = LESSONS[categoryKey].kind;
-        gameGrid.className = "grid" + (kind === "letters" ? " letters" : "");
+        gameGrid.className = "grid" + (gridUsesLettersLayout(currentItems()) ? " letters" : "");
         gameGrid.replaceChildren();
         if (!choices.length) return;
         for (const item of choices) {
@@ -875,7 +823,7 @@
         speechSynthesis.addEventListener("voiceschanged", populateVoices);
       }
 
-      renderCategoriesFix();
+      renderTopicGrid();
       renderReadGrid();
     </script>
   </body>

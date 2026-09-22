@@ -62,11 +62,14 @@ python3 -m http.server 8080
 
 ## What’s in the app
 
-- **READ** — tap cards to see big **UPPERCASE** text and hear the word. Topics: **LETTERS** (A–Z), **DIGITS** (0–10), **NUMBERS**, **ANIMALS**, **COLORS**.
+- **READ** — tap cards to see big **UPPERCASE** text and hear the word.
 - **LISTEN** — tap **▶ PLAY**, hear a word, then pick the matching card; earn stars.
+
+**10 big topics** in a grid — one tap (LETTERS, NUMBERS, ANIMALS, FOOD, …). **370+** cards in `lessons.js`.
+
 - **GROWN-UP SETTINGS** — voice and speed (saved in `localStorage` on the same device).
 
-All lesson content is embedded in the page as data—easy to extend with new letters, digits, and words.
+Add more words in `lessons.js`: each line is `["word", "emoji", "SHORT UPPERCASE LINE"]` inside a `pack([...])` list.
 
 ## Privacy
 
