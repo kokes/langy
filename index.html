@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>LANGY — LEARN ENGLISH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #e8f4ff;
+        --bg2: #fff5e6;
+        --ink: #2d3748;
+        --accent: #ff6b6b;
+        --accent2: #4ecdc4;
+        --accent3: #ffe66d;
+        --card: #ffffff;
+        --shadow: 0 6px 0 #cbd5e0, 0 10px 24px #00000018;
+        --shadow-press: 0 2px 0 #cbd5e0, 0 4px 12px #00000012;
+        --radius: 1.25rem;
+        font-family: "Nunito", system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        color: var(--ink);
+        background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 55%, #f0e6ff 100%);
+      }
+
+      .app {
+        max-width: 32rem;
+        margin: 0 auto;
+        padding: 1rem 1rem 2rem;
+        text-transform: uppercase;
+      }
+
+      header {
+        text-align: center;
+        padding: 0.5rem 0 1rem;
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        line-height: 1;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+
+      .logo span {
+        color: var(--accent);
+      }
+
+      .tagline {
+        margin: 0.35rem 0 0;
+        font-size: 1rem;
+        opacity: 0.85;
+      }
+
+      .mode-toggle {
+        display: flex;
+        gap: 0.35rem;
+        background: #fff8;
+        padding: 0.35rem;
+        border-radius: 999px;
+        margin-bottom: 1rem;
+        box-shadow: inset 0 0 0 2px #fff;
+      }
+
+      .mode-toggle button {
+        flex: 1;
+        border: none;
+        font: inherit;
+        font-weight: 800;
+        font-size: 0.72rem;
+        padding: 0.65rem 0.35rem;
+        border-radius: 999px;
+        cursor: pointer;
+        background: transparent;
+        color: var(--ink);
+        transition: background 0.15s, transform 0.1s;
+      }
+
+      @media (min-width: 380px) {
+        .mode-toggle button {
+          font-size: 0.82rem;
+        }
+      }
+
+      .mode-toggle button[aria-pressed="true"] {
+        background: var(--accent3);
+        box-shadow: var(--shadow-press);
+      }
+
+      .categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .categories button {
+        border: none;
+        font: inherit;
+        font-weight: 800;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 999px;
+        cursor: pointer;
+        background: var(--card);
+        box-shadow: var(--shadow-press);
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+
+      .categories button[aria-pressed="true"] {
+        background: var(--accent2);
+        color: #0d3d3a;
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #2a9d8f;
+      }
+
+      .panel {
+        display: none;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .grid.letters {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+      }
+
+      @media (min-width: 380px) {
+        .grid:not(.letters) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .card {
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 0.75rem 0.5rem 0.65rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15rem;
+        transition: transform 0.12s, box-shadow 0.12s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .grid.letters .card {
+        padding: 0.5rem 0.25rem;
+        border-radius: 0.85rem;
+      }
+
+      .card:active,
+      .card.pressed {
+        transform: translateY(4px);
+        box-shadow: var(--shadow-press);
+      }
+
+      .card .emoji {
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+
+      .grid.letters .card .emoji {
+        font-size: 1.35rem;
+      }
+
+      .card .glyph {
+        font-weight: 800;
+        font-size: 2.25rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+      }
+
+      .grid.letters .card .glyph {
+        font-size: 1.75rem;
+      }
+
+      .card .word {
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        text-align: center;
+        line-height: 1.15;
+      }
+
+      .card .digit {
+        font-weight: 800;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .card.correct {
+        animation: pop 0.45s ease;
+        outline: 4px solid var(--accent2);
+      }
+
+      .card.wrong {
+        animation: wiggle 0.35s ease;
+        outline: 4px solid var(--accent);
+      }
+
+      @keyframes pop {
+        50% {
+          transform: scale(1.06);
+        }
+      }
+
+      @keyframes wiggle {
+        25% {
+          transform: rotate(-4deg);
+        }
+        75% {
+          transform: rotate(4deg);
+        }
+      }
+
+      .read-banner {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        min-height: 5.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+      }
+
+      .read-banner .big {
+        font-size: 2.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        line-height: 1;
+      }
+
+      .read-banner .hint-line {
+        font-size: 0.9rem;
+        opacity: 0.85;
+        margin: 0;
+      }
+
+      .game-box {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1.25rem 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .game-box p {
+        margin: 0 0 0.75rem;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      .game-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .btn {
+        border: none;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 0.65rem 1.2rem;
+        box-shadow: var(--shadow-press);
+        transition: transform 0.1s;
+      }
+
+      .btn:active {
+        transform: translateY(2px);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .btn-secondary {
+        background: var(--accent3);
+        color: var(--ink);
+      }
+
+      .stars {
+        font-size: 1.75rem;
+        min-height: 2rem;
+        margin-top: 0.5rem;
+      }
+
+      .score {
+        font-weight: 800;
+        color: #5a67d8;
+      }
+
+      details.settings {
+        margin-top: 1.5rem;
+        background: #fffc;
+        border-radius: var(--radius);
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      details.settings summary {
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .settings-grid {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+      }
+
+      .settings-grid label {
+        display: block;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+      }
+
+      .settings-grid select {
+        text-transform: none;
+      }
+
+      select,
+      input[type="range"] {
+        width: 100%;
+        font: inherit;
+      }
+
+      .status {
+        text-align: center;
+        min-height: 1.25rem;
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1 class="logo">LANG<span>Y</span> 🦜</h1>
+        <p class="tagline">TAP, LISTEN, AND READ!</p>
+      </header>
+
+      <div class="mode-toggle" role="group" aria-label="Mode">
+        <button type="button" id="mode-read" aria-pressed="true">Read</button>
+        <button type="button" id="mode-game" aria-pressed="false">Listen</button>
+      </div>
+
+      <div class="categories" role="group" aria-label="Category"></div>
+
+      <section class="panel active" id="panel-read" aria-label="Read mode">
+        <div class="read-banner" id="read-banner" aria-live="polite">
+          <p class="hint-line">TAP A CARD TO READ AND HEAR IT</p>
+        </div>
+        <div class="grid" id="read-grid"></div>
+      </section>
+
+      <section class="panel" id="panel-game" aria-label="Listen mode">
+        <div class="game-box">
+          <p id="game-prompt">PRESS PLAY AND FIND THE WORD!</p>
+          <div class="game-actions">
+            <button type="button" class="btn btn-primary" id="game-play">▶ PLAY</button>
+            <button type="button" class="btn btn-secondary" id="game-next">NEW</button>
+          </div>
+          <div class="stars" id="game-stars" aria-live="polite"></div>
+          <p class="score" id="game-score"></p>
+        </div>
+        <div class="grid" id="game-grid"></div>
+      </section>
+
+      <p class="status" id="status" role="status"></p>
+
+      <details class="settings">
+        <summary>GROWN-UP SETTINGS</summary>
+        <div class="settings-grid">
+          <div>
+            <label for="voice">VOICE</label>
+            <select id="voice" aria-label="Voice"></select>
+          </div>
+          <div>
+            <label for="rate">SPEED <span id="rate-value">0.9</span></label>
+            <input id="rate" type="range" min="0.6" max="1.2" step="0.05" value="0.9" />
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <script>
+      const LETTER_ITEMS = [
+        ["A", "🍎", "A IS FOR APPLE"],
+        ["B", "🐻", "B IS FOR BEAR"],
+        ["C", "🐱", "C IS FOR CAT"],
+        ["D", "🐶", "D IS FOR DOG"],
+        ["E", "🐘", "E IS FOR ELEPHANT"],
+        ["F", "🐟", "F IS FOR FISH"],
+        ["G", "🍇", "G IS FOR GRAPES"],
+        ["H", "🏠", "H IS FOR HOUSE"],
+        ["I", "🧊", "I IS FOR ICE"],
+        ["J", "🧃", "J IS FOR JUICE"],
+        ["K", "🪁", "K IS FOR KITE"],
+        ["L", "🦁", "L IS FOR LION"],
+        ["M", "🌙", "M IS FOR MOON"],
+        ["N", "🪺", "N IS FOR NEST"],
+        ["O", "🍊", "O IS FOR ORANGE"],
+        ["P", "🐷", "P IS FOR PIG"],
+        ["Q", "👑", "Q IS FOR QUEEN"],
+        ["R", "🐰", "R IS FOR RABBIT"],
+        ["S", "☀️", "S IS FOR SUN"],
+        ["T", "🌳", "T IS FOR TREE"],
+        ["U", "☂️", "U IS FOR UMBRELLA"],
+        ["V", "🎻", "V IS FOR VIOLIN"],
+        ["W", "💧", "W IS FOR WATER"],
+        ["X", "🩻", "X IS FOR X-RAY"],
+        ["Y", "🪀", "Y IS FOR YO-YO"],
+        ["Z", "🦓", "Z IS FOR ZEBRA"],
+      ].map(([letter, emoji, line]) => ({
+        word: letter.toLowerCase(),
+        letter,
+        emoji,
+        line,
+      }));
+
+      const DIGIT_ITEMS = [
+        ["0", "ZERO", "0️⃣", "ZERO EGGS IN THE BOX!"],
+        ["1", "ONE", "1️⃣", "ONE LITTLE STAR!"],
+        ["2", "TWO", "2️⃣", "TWO HANDS!"],
+        ["3", "THREE", "3️⃣", "THREE BEARS!"],
+        ["4", "FOUR", "4️⃣", "FOUR WHEELS!"],
+        ["5", "FIVE", "5️⃣", "HIGH FIVE!"],
+        ["6", "SIX", "6️⃣", "SIX EGGS!"],
+        ["7", "SEVEN", "7️⃣", "SEVEN COLORS!"],
+        ["8", "EIGHT", "8️⃣", "EIGHT LEGS ON A SPIDER!"],
+        ["9", "NINE", "9️⃣", "NINE BALLOONS!"],
+        ["10", "TEN", "🔟", "TEN FINGERS!"],
+      ].map(([digit, word, emoji, line]) => ({
+        word: word.toLowerCase(),
+        digit,
+        emoji,
+        line,
+      }));
+
+      const LESSONS = {
+        letters: {
+          label: "LETTERS",
+          icon: "🔤",
+          kind: "letters",
+          items: LETTER_ITEMS,
+        },
+        digits: {
+          label: "DIGITS",
+          icon: "🔢",
+          kind: "digits",
+          items: DIGIT_ITEMS,
+        },
+        numbers: {
+          label: "NUMBERS",
+          icon: "🔢",
+          kind: "words",
+          items: DIGIT_ITEMS.filter((d) => d.digit !== "10" && d.digit !== "0"),
+        },
+        animals: {
+          label: "ANIMALS",
+          icon: "🐾",
+          kind: "words",
+          items: [
+            { word: "cat", emoji: "🐱", line: "THE CAT SAYS MEOW!" },
+            { word: "dog", emoji: "🐶", line: "A HAPPY DOG!" },
+            { word: "bird", emoji: "🐦", line: "THE BIRD CAN FLY!" },
+            { word: "fish", emoji: "🐟", line: "THE FISH SWIMS!" },
+            { word: "cow", emoji: "🐮", line: "THE COW SAYS MOO!" },
+            { word: "pig", emoji: "🐷", line: "OINK OINK!" },
+            { word: "duck", emoji: "🦆", line: "QUACK QUACK!" },
+            { word: "frog", emoji: "🐸", line: "RIBBIT!" },
+            { word: "lion", emoji: "🦁", line: "ROAR!" },
+          ],
+        },
+        colors: {
+          label: "COLORS",
+          icon: "🎨",
+          kind: "words",
+          items: [
+            { word: "red", emoji: "🔴", line: "RED LIKE AN APPLE!" },
+            { word: "blue", emoji: "🔵", line: "BLUE LIKE THE SKY!" },
+            { word: "green", emoji: "🟢", line: "GREEN LIKE GRASS!" },
+            { word: "yellow", emoji: "🟡", line: "YELLOW LIKE THE SUN!" },
+            { word: "orange", emoji: "🟠", line: "ORANGE LIKE A CARROT!" },
+            { word: "purple", emoji: "🟣", line: "PURPLE LIKE GRAPES!" },
+            { word: "pink", emoji: "🩷", line: "PRETTY PINK!" },
+            { word: "black", emoji: "⚫", line: "BLACK LIKE NIGHT!" },
+            { word: "white", emoji: "⚪", line: "WHITE LIKE SNOW!" },
+          ],
+        },
+      };
+
+      const synth = window.speechSynthesis;
+      const STORAGE_VOICE = "langy-voice";
+      const STORAGE_RATE = "langy-rate";
+
+      const GIMMICK =
+        /eloquence|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|jester|organ|superstar|trinoids|whisper|zarvox|wobble|albert|fred|hysterical|pipe|princess|ralph|junior|kathy|eddy|flo|grandma|grandpa/i;
+      const RECOMMENDED = /^(Samantha|Alex|Karen|Daniel|Moira|Tessa|Victoria|Kate|Oliver|Arthur|Tom|Martha|Jamie|Aaron|Nathan)/i;
+
+      let categoryKey = "letters";
+      let gameTarget = null;
+      let gameScore = 0;
+      let gameRound = 0;
+      let speakingChain = false;
+
+      const statusEl = document.getElementById("status");
+      const voiceEl = document.getElementById("voice");
+      const rateEl = document.getElementById("rate");
+      const rateValueEl = document.getElementById("rate-value");
+      const readGrid = document.getElementById("read-grid");
+      const gameGrid = document.getElementById("game-grid");
+      const categoriesEl = document.querySelector(".categories");
+      const readBanner = document.getElementById("read-banner");
+
+      function up(text) {
+        return String(text).toUpperCase();
+      }
+
+      function speakKey(item) {
+        if (item.letter) return item.letter;
+        if (item.digit && LESSONS[categoryKey].kind === "digits") return item.digit;
+        return item.word;
+      }
+
+      function displayTitle(item) {
+        if (item.letter) return item.letter;
+        if (item.digit && LESSONS[categoryKey].kind === "digits") return item.digit;
+        if (item.digit) return item.digit + " · " + up(item.word);
+        return up(item.word);
+      }
+
+      function setStatus(msg) {
+        statusEl.textContent = up(msg);
+      }
+
+      function voiceScore(v) {
+        if (GIMMICK.test(v.name)) return 0;
+        if (/premium|enhanced|neural/i.test(v.name)) return 100;
+        if (RECOMMENDED.test(v.name)) return 80;
+        if (v.lang.startsWith("en") && v.localService) return 50;
+        if (v.lang.startsWith("en")) return 40;
+        return 10;
+      }
+
+      function bestEnglishVoice(voices) {
+        const en = voices.filter((v) => v.lang.startsWith("en") && voiceScore(v) > 0);
+        en.sort((a, b) => voiceScore(b) - voiceScore(a));
+        return en[0] || voices.find((v) => v.lang.startsWith("en")) || voices[0];
+      }
+
+      function resolveVoice() {
+        const voices = synth.getVoices();
+        const saved = localStorage.getItem(STORAGE_VOICE);
+        if (saved) {
+          const match = voices.find((v) => v.name === saved);
+          if (match) return match;
+        }
+        return bestEnglishVoice(voices);
+      }
+
+      function populateVoices() {
+        const voices = synth.getVoices();
+        if (!voices.length) return;
+
+        const current = voiceEl.value || localStorage.getItem(STORAGE_VOICE);
+        voiceEl.replaceChildren();
+
+        const en = voices.filter((v) => v.lang.startsWith("en"));
+        const list = (en.length ? en : voices)
+          .slice()
+          .sort((a, b) => voiceScore(b) - voiceScore(a) || a.name.localeCompare(b.name));
+
+        const good = list.filter((v) => voiceScore(v) >= 50);
+        const weak = list.filter((v) => voiceScore(v) < 50 && voiceScore(v) > 0);
+
+        function addGroup(label, items) {
+          if (!items.length) return;
+          const group = document.createElement("optgroup");
+          group.label = up(label);
+          for (const voice of items) {
+            const opt = document.createElement("option");
+            opt.value = voice.name;
+            opt.textContent =
+              voice.name +
+              " (" +
+              voice.lang +
+              ")" +
+              (voiceScore(voice) >= 80 ? " ★" : GIMMICK.test(voice.name) ? " (NOVELTY)" : "");
+            group.appendChild(opt);
+          }
+          voiceEl.appendChild(group);
+        }
+
+        addGroup("Clear voices", good);
+        addGroup("Other", weak);
+
+        const names = [...voiceEl.options].map((o) => o.value);
+        const pick = names.includes(current) ? current : good[0]?.name || list[0]?.name;
+        if (pick) voiceEl.value = pick;
+      }
+
+      function speakText(text, rateOverride) {
+        if (!synth || !text) return Promise.resolve();
+
+        return new Promise((resolve) => {
+          synth.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.rate = rateOverride ?? parseFloat(rateEl.value, 10);
+          utter.pitch = 1.05;
+          utter.volume = 1;
+          const voice = resolveVoice();
+          if (voice) utter.voice = voice;
+
+          utter.onend = () => resolve();
+          utter.onerror = () => resolve();
+          synth.speak(utter);
+        });
+      }
+
+      async function speakItem(item, withLine) {
+        if (speakingChain) return;
+        speakingChain = true;
+        setStatus("LISTEN…");
+        await speakText(speakKey(item));
+        if (withLine && item.line) {
+          await speakText(item.line, parseFloat(rateEl.value, 10) * 0.92);
+        }
+        setStatus("");
+        speakingChain = false;
+      }
+
+      function currentItems() {
+        return LESSONS[categoryKey].items;
+      }
+
+      function renderCategoriesFix() {
+        categoriesEl.replaceChildren();
+        for (const [key, cat] of Object.entries(LESSONS)) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = cat.icon + " " + cat.label;
+          btn.setAttribute("aria-pressed", key === categoryKey ? "true" : "false");
+          btn.addEventListener("click", () => {
+            categoryKey = key;
+            renderCategoriesFix();
+            renderReadGrid();
+            resetGame();
+          });
+          categoriesEl.appendChild(btn);
+        }
+      }
+
+      function cardInner(item) {
+        const kind = LESSONS[categoryKey].kind;
+        if (item.letter) {
+          return (
+            '<span class="glyph" aria-hidden="true">' +
+            item.letter +
+            '</span><span class="emoji" aria-hidden="true">' +
+            item.emoji +
+            "</span>"
+          );
+        }
+        if (kind === "digits") {
+          return (
+            '<span class="digit" aria-hidden="true">' +
+            item.digit +
+            '</span><span class="word">' +
+            up(item.word) +
+            "</span>"
+          );
+        }
+        let wordHtml = up(item.word);
+        if (item.digit) {
+          wordHtml = item.digit + "<br>" + up(item.word);
+        }
+        return (
+          '<span class="emoji" aria-hidden="true">' +
+          item.emoji +
+          '</span><span class="word">' +
+          wordHtml +
+          "</span>"
+        );
+      }
+
+      function makeCard(item, onClick) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "card";
+        btn.dataset.word = item.word;
+        btn.innerHTML = cardInner(item);
+        btn.addEventListener("click", () => {
+          btn.classList.add("pressed");
+          setTimeout(() => btn.classList.remove("pressed"), 150);
+          onClick(item, btn);
+        });
+        return btn;
+      }
+
+      function resetReadBanner() {
+        readBanner.innerHTML = '<p class="hint-line">TAP A CARD TO READ AND HEAR IT</p>';
+      }
+
+      function showReadBanner(item) {
+        readBanner.innerHTML =
+          '<span class="big">' +
+          displayTitle(item) +
+          '</span><span class="emoji" style="font-size:2rem" aria-hidden="true">' +
+          item.emoji +
+          '</span><p class="hint-line">' +
+          (item.line || "") +
+          "</p>";
+      }
+
+      function renderReadGrid() {
+        resetReadBanner();
+        const kind = LESSONS[categoryKey].kind;
+        readGrid.className = "grid" + (kind === "letters" ? " letters" : "");
+        readGrid.replaceChildren();
+        for (const item of currentItems()) {
+          readGrid.appendChild(
+            makeCard(item, (it) => {
+              showReadBanner(it);
+              speakItem(it, true);
+            })
+          );
+        }
+      }
+
+      function pickGameOptions() {
+        const items = currentItems();
+        const target = items[Math.floor(Math.random() * items.length)];
+        const options = [target];
+        const pool = items.filter((i) => i.word !== target.word);
+        while (options.length < Math.min(3, items.length)) {
+          const pick = pool[Math.floor(Math.random() * pool.length)];
+          if (!options.some((o) => o.word === pick.word)) options.push(pick);
+        }
+        options.sort(() => Math.random() - 0.5);
+        return { target, options };
+      }
+
+      function resetGame() {
+        gameTarget = null;
+        document.getElementById("game-prompt").textContent = "PRESS PLAY AND FIND THE WORD!";
+        document.getElementById("game-stars").textContent = "";
+        document.getElementById("game-score").textContent =
+          gameScore > 0 ? "STARS: " + gameScore : "";
+        renderGameGrid([]);
+      }
+
+      function renderGameGrid(choices) {
+        const kind = LESSONS[categoryKey].kind;
+        gameGrid.className = "grid" + (kind === "letters" ? " letters" : "");
+        gameGrid.replaceChildren();
+        if (!choices.length) return;
+        for (const item of choices) {
+          gameGrid.appendChild(
+            makeCard(item, (it, btn) => {
+              if (!gameTarget) {
+                setStatus("PRESS PLAY FIRST!");
+                return;
+              }
+              if (it.word === gameTarget.word) {
+                btn.classList.add("correct");
+                gameScore += 1;
+                gameRound += 1;
+                document.getElementById("game-score").textContent =
+                  "STARS: " + gameScore + " · ROUND " + gameRound;
+                document.getElementById("game-stars").textContent = "⭐".repeat(Math.min(gameScore, 8));
+                speakText("GREAT JOB!").then(() => startGameRound());
+              } else {
+                btn.classList.add("wrong");
+                setTimeout(() => btn.classList.remove("wrong"), 400);
+                speakText("TRY AGAIN!");
+              }
+            })
+          );
+        }
+      }
+
+      function startGameRound() {
+        const { target, options } = pickGameOptions();
+        gameTarget = target;
+        renderGameGrid(options);
+        document.getElementById("game-prompt").textContent = "WHICH ONE DID YOU HEAR?";
+      }
+
+      function setMode(mode) {
+        const modes = ["read", "game"];
+        for (const m of modes) {
+          const on = m === mode;
+          document.getElementById("mode-" + m).setAttribute("aria-pressed", on ? "true" : "false");
+          document.getElementById("panel-" + m).classList.toggle("active", on);
+        }
+        synth?.cancel();
+        if (mode === "game") {
+          resetGame();
+          startGameRound();
+        }
+      }
+
+      document.getElementById("mode-read").addEventListener("click", () => setMode("read"));
+      document.getElementById("mode-game").addEventListener("click", () => setMode("game"));
+
+      document.getElementById("game-play").addEventListener("click", () => {
+        if (!gameTarget) startGameRound();
+        speakItem(gameTarget, false);
+      });
+
+      document.getElementById("game-next").addEventListener("click", () => {
+        startGameRound();
+        speakItem(gameTarget, false);
+      });
+
+      rateEl.addEventListener("input", () => {
+        rateValueEl.textContent = rateEl.value;
+        localStorage.setItem(STORAGE_RATE, rateEl.value);
+      });
+
+      voiceEl.addEventListener("change", () => {
+        localStorage.setItem(STORAGE_VOICE, voiceEl.value);
+      });
+
+      const savedRate = localStorage.getItem(STORAGE_RATE);
+      if (savedRate) {
+        rateEl.value = savedRate;
+        rateValueEl.textContent = savedRate;
+      }
+
+      if (!synth) {
+        setStatus("SPEECH IS NOT SUPPORTED IN THIS BROWSER.");
+      } else {
+        populateVoices();
+        speechSynthesis.addEventListener("voiceschanged", populateVoices);
+      }
+
+      renderCategoriesFix();
+      renderReadGrid();
+    </script>
+  </body>
+</html>
