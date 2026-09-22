@@ -1,8 +1,20 @@
 # LANGY
 
-A playful, **100% client-side** page for teaching kids English **reading and listening**. All on-screen text is **UPPERCASE** so letters and words look the way kids learn them. Tap cards to hear words and play a simple listening game—no server, no API keys, no accounts.
+A playful, **100% client-side** page for teaching kids English **reading and listening**, aimed at about **ages 5–7**. All on-screen text is **UPPERCASE**. Tap cards to hear words and play a simple listening game—no server, no API keys, no accounts.
 
 Open `index.html` in a browser (or serve the folder locally). Everything runs in the tab.
+
+## Vocabulary (`lessons.js`)
+
+One file holds all words. Lists favor **short, concrete** things kids this age meet in books and school: animals, food, family, colors, simple actions, and a little make-believe (unicorns, dragons). We skip adult topics, long dinosaur names, abstract jobs, and words like coffee or sushi.
+
+To add a word:
+
+```javascript
+{ word: "frog", emoji: "🐸", line: "THE FROG SAYS RIBBIT!" },
+```
+
+Put it in the right `items: [...]` block, or add a new lesson key and include that key in `TOPICS` in `index.html`.
 
 ## How speech works (client-side only)
 
@@ -27,10 +39,6 @@ function speak(text, { rate = 0.9, pitch = 1.05 } = {}) {
   if (voice) utter.voice = voice;
   synth.speak(utter);
 }
-
-document.getElementById("card").addEventListener("click", () => {
-  speak("Cat");
-});
 ```
 
 Important details for a kid-friendly app:
@@ -65,15 +73,13 @@ python3 -m http.server 8080
 - **READ** — tap cards to see big **UPPERCASE** text and hear the word.
 - **LISTEN** — tap **▶ PLAY**, hear a word, then pick the matching card; earn stars.
 
-**10 big topics** in a grid — one tap (LETTERS, NUMBERS, ANIMALS, FOOD, …). **370+** cards in `lessons.js`.
+**10 big topics** in a grid — one tap (LETTERS, NUMBERS, ANIMALS, FOOD, …). Each topic pulls from one or more lesson groups inside `lessons.js`.
 
-- **GROWN-UP SETTINGS** — voice and speed (saved in `localStorage` on the same device).
-
-Add more words in `lessons.js`: each line is `["word", "emoji", "SHORT UPPERCASE LINE"]` inside a `pack([...])` list.
+- **GROWN-UP SETTINGS** — voice and speed (saved in `localStorage` as `langy-voice` and `langy-rate`).
 
 ## Privacy
 
-No analytics, no external TTS, no cookies. Optional `localStorage` keys: `langy-voice`, `langy-rate`.
+No analytics, no external TTS, no cookies.
 
 ## Browser support
 

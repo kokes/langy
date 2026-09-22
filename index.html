@@ -450,14 +450,39 @@
       const TOPICS = [
         { id: "letters", label: "LETTERS", icon: "🔤", keys: ["letters"] },
         { id: "numbers", label: "NUMBERS", icon: "🔢", keys: ["digits", "numbers"] },
-        { id: "animals", label: "ANIMALS", icon: "🐾", keys: ["animals"] },
+        {
+          id: "animals",
+          label: "ANIMALS",
+          icon: "🐾",
+          keys: ["animals", "pets", "dinosaurs", "insects", "birds", "ocean", "farm"],
+        },
         { id: "food", label: "FOOD", icon: "🍎", keys: ["food"] },
         { id: "colors", label: "COLORS", icon: "🎨", keys: ["colors"] },
-        { id: "people", label: "PEOPLE", icon: "🧒", keys: ["family", "body", "feelings", "clothes", "jobs"] },
+        {
+          id: "people",
+          label: "PEOPLE",
+          icon: "🧒",
+          keys: ["family", "body", "feelings", "clothes", "jobs"],
+        },
         { id: "home", label: "HOME", icon: "🏠", keys: ["home", "school", "toys"] },
-        { id: "outside", label: "OUTSIDE", icon: "🌳", keys: ["nature", "weather", "places"] },
-        { id: "go", label: "GO!", icon: "🚗", keys: ["transport", "sports", "actions"] },
-        { id: "more", label: "MORE", icon: "⭐", keys: ["shapes", "time"] },
+        {
+          id: "outside",
+          label: "OUTSIDE",
+          icon: "🌳",
+          keys: ["nature", "weather", "places", "seasons"],
+        },
+        {
+          id: "go",
+          label: "GO!",
+          icon: "🚗",
+          keys: ["transport", "sports", "actions"],
+        },
+        {
+          id: "more",
+          label: "MORE",
+          icon: "⭐",
+          keys: ["shapes", "time", "fantasy", "music", "space"],
+        },
       ];
 
       let topicId = "letters";
@@ -477,6 +502,15 @@
 
       function up(text) {
         return String(text).toUpperCase();
+      }
+
+      function shuffleItems(items) {
+        const list = items.slice();
+        for (let i = list.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [list[i], list[j]] = [list[j], list[i]];
+        }
+        return list;
       }
 
       function lessonKind(item) {
@@ -703,7 +737,7 @@
 
       function renderReadGrid() {
         resetReadBanner();
-        const items = currentItems();
+        const items = shuffleItems(currentItems());
         readGrid.className = "grid" + (gridUsesLettersLayout(items) ? " letters" : "");
         readGrid.replaceChildren();
         for (const item of items) {
@@ -725,8 +759,7 @@
           const pick = pool[Math.floor(Math.random() * pool.length)];
           if (!options.some((o) => o.word === pick.word)) options.push(pick);
         }
-        options.sort(() => Math.random() - 0.5);
-        return { target, options };
+        return { target, options: shuffleItems(options) };
       }
 
       function resetGame() {
@@ -782,6 +815,9 @@
           document.getElementById("panel-" + m).classList.toggle("active", on);
         }
         synth?.cancel();
+        if (mode === "read") {
+          renderReadGrid();
+        }
         if (mode === "game") {
           resetGame();
           startGameRound();
